@@ -23,8 +23,7 @@ public class WeixinServlet extends HttpServlet{
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.debug("get");
-
-        getServletContext().log("hello :"+support.getToken());
+        //getServletContext().log("hello :"+support.getToken());
         this.support.bindServer(request, response);
     }
 
