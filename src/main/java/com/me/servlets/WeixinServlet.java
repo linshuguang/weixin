@@ -19,24 +19,26 @@ public class WeixinServlet extends HttpServlet{
 
     private final MySupport support = new MySupport();
 
-
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.debug("get");
-        //getServletContext().log("hello :"+support.getToken());
+        logger.debug("to bindServer");
         this.support.bindServer(request, response);
+        logger.debug("bindServer OK");
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.debug("post");
         if(this.support.isLegal(request)) {
+            logger.debug("valid weixin request");
             response.setCharacterEncoding("UTF-8");
             String resp = this.support.processRequest(request);
             PrintWriter pw = response.getWriter();
             pw.write(resp);
             pw.flush();
             pw.close();
+        }else{
+            logger.debug("not valid weixin request");
         }
     }
 

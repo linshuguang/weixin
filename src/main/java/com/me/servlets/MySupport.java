@@ -10,8 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.Properties;
 
 /**
@@ -27,15 +29,17 @@ public class MySupport extends WeixinSupport {
 
     private final String filename = "config/config.properties";
     private final String appIdConfName = "weixin.appId";
+    private final String appSecretConfName = "weixin.appSecret";
+    private final String tokenConfName = "weixin.token";
 
-    @Override
-    protected String getToken(){
+    private String getProperty(String confName){
         Properties prop = new Properties();
         InputStream input = null;
+        String property = null;
         try {
             input = MySupport.class.getClassLoader().getResourceAsStream(filename);
             prop.load(input);
-            appId = prop.getProperty(appIdConfName);
+            property = prop.getProperty(confName);
         }catch (Exception e) {
             logger.error(ExceptionUtils.getFullStackTrace(e));
         } finally {
@@ -47,14 +51,24 @@ public class MySupport extends WeixinSupport {
                 }
             }
         }
-        return appId;
+        return property;
+    }
+
+    @Override
+    protected String getAppId() {
+        return getProperty(appIdConfName);
+    }
+
+    @Override
+    protected String getToken(){
+        return getProperty(tokenConfName);
     }
 
     @Override
     protected BaseMsg handleTextMsg(TextReqMsg msg) {
         String content = msg.getContent();
-        logger.debug("用户发送到服务器的内容:{}", content);
-        return new TextMsg("服务器回复用户消息!");
+        logger.debug("content:{}", content);
+        return new TextMsg("hello world");
     }
 
     @Override
@@ -63,6 +77,30 @@ public class MySupport extends WeixinSupport {
         String timestamp = request.getParameter("timestamp");
         String nonce = request.getParameter("nonce");
         return SignUtil.checkSignature(this.getToken(), signature, timestamp, nonce);
+    }
+
+    @Override
+    public void bindServer(HttpServletRequest request, HttpServletResponse response) {
+        if(this.isLegal(request)) {
+            try {
+                PrintWriter pw = response.getWriter();
+                pw.write(request.getParameter("echostr"));
+                pw.flush();
+                pw.close();
+            } catch (Exception var4) {
+                logger.error("绑定服务器异常1", var4);
+            }
+        }else{
+            try {
+                PrintWriter pw = response.getWriter();
+                pw.write("not valid");
+                pw.flush();
+                pw.close();
+            } catch (Exception var4) {
+                logger.error("绑定服务器异常2", var4);
+            }
+        }
+
     }
 
 }

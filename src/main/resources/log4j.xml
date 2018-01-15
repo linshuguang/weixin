@@ -4,7 +4,7 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
     <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="mailbot.log" />
+        <param name="File" value="${catalina.home}/logs/mailbot.log" />
         <param name="DatePattern" value=".yyyyMMdd" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="[%-5p %d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] %l [%m]%n" />
@@ -29,7 +29,7 @@
 
     <logger name="com.me" additivity="false">
         <level value="debug" />
-        <!--appender-ref ref="file" /-->
+        <appender-ref ref="file" />
         <appender-ref ref="stdout" />
         <appender-ref ref="stderr" />
     </logger>

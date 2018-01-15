@@ -9,7 +9,7 @@
 *.ear
 
 
-src/main/resources/config/*.properties
+*.properties
 
 #package files
 target
