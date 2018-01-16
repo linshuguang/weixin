@@ -28,9 +28,10 @@ public class MySupport extends WeixinSupport {
     private String appId;
 
     private final String filename = "config/config.properties";
-    private final String appIdConfName = "weixin.appId";
-    private final String appSecretConfName = "weixin.appSecret";
-    private final String tokenConfName = "weixin.token";
+    private final String appIdConfName = "appId";
+    private final String appSecretConfName = "appSecret";
+    private final String tokenConfName = "token";
+    private final String aesKeyConfName = "aesKey";
 
     private String getProperty(String confName){
         Properties prop = new Properties();
@@ -53,15 +54,25 @@ public class MySupport extends WeixinSupport {
         }
         return property;
     }
+    private String getWeiXinProperty(String confName){
+        String env = System.getenv("WEIXIN_ENV");
+        env = "production";
+        return getProperty("weixin."+env+"."+confName);
+    }
+
+    @Override
+    protected String getAESKey() {
+        return getWeiXinProperty(aesKeyConfName);
+    }
 
     @Override
     protected String getAppId() {
-        return getProperty(appIdConfName);
+        return getWeiXinProperty(appIdConfName);
     }
 
     @Override
     protected String getToken(){
-        return getProperty(tokenConfName);
+        return getWeiXinProperty(tokenConfName);
     }
 
     @Override
