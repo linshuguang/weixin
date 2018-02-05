@@ -84,7 +84,14 @@ public class MySupport extends WeixinSupport {
 
     @Override
     protected BaseMsg handleTextMsg(TextReqMsg msg) {
-        return dubboBiz.handleMessage(msg);
+        
+        try {
+            return dubboBiz.handleMessage(msg);
+        }catch(Exception e) {
+            logger.error(ExceptionUtils.getFullStackTrace(e));
+            String content = msg.getContent();
+            return new TextMsg("echo :" + content);
+        }
     }
 
     @Override

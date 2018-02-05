@@ -50,19 +50,14 @@ public class DubboBiz {
         return result;
     }
 
-    public BaseMsg handleMessage(BaseReqMsg msg){
-        try {
-            ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"app_facade_consumer.xml"});
-            context.start();
+    public BaseMsg handleMessage(BaseReqMsg msg) throws Exception {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"app_facade_consumer.xml"});
+        context.start();
 
-            //获取远程服务代理
-            FacadeService facadeService = (FacadeService) context.getBean("facadeService");
-            // 调用方法
-            Message message = facadeService.handleMessage(transformMsgToMessage(msg));
-            return transformMessageToMsg(message);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        //获取远程服务代理
+        FacadeService facadeService = (FacadeService) context.getBean("facadeService");
+        // 调用方法
+        Message message = facadeService.handleMessage(transformMsgToMessage(msg));
+        return transformMessageToMsg(message);
     }
 }
