@@ -4,9 +4,11 @@ import com.github.sd4324530.fastweixin.message.BaseMsg;
 import com.github.sd4324530.fastweixin.message.req.BaseReq;
 import com.github.sd4324530.fastweixin.message.req.BaseReqMsg;
 import com.github.sd4324530.fastweixin.message.req.TextReqMsg;
+import com.me.proxy.BServiceProxy;
 import name.lsg.common.Message;
 import name.lsg.common.TextMsg;
 import name.lsg.facade.service.FacadeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,10 @@ import java.util.List;
  */
 @Service
 public class DubboBiz {
+
+
+    @Autowired
+    BServiceProxy bServiceProxy;
 
     private List<String> makeList(String str){
         List<String > fromList = new ArrayList<String>();
@@ -51,13 +57,9 @@ public class DubboBiz {
     }
 
     public BaseMsg handleMessage(BaseReqMsg msg) throws Exception {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"app_facade_consumer.xml"});
-        context.start();
 
-        //获取远程服务代理
-        FacadeService facadeService = (FacadeService) context.getBean("facadeService");
         // 调用方法
-        Message message = facadeService.handleMessage(transformMsgToMessage(msg));
+        Message message = bServiceProxy.handleMessage(transformMsgToMessage(msg));
         return transformMessageToMsg(message);
     }
 }
