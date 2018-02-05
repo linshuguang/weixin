@@ -5,9 +5,11 @@ import com.github.sd4324530.fastweixin.message.BaseMsg;
 import com.github.sd4324530.fastweixin.message.TextMsg;
 import com.github.sd4324530.fastweixin.message.req.TextReqMsg;
 import com.github.sd4324530.fastweixin.servlet.WeixinSupport;
+import com.me.biz.DubboBiz;
 import org.codehaus.plexus.util.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +25,11 @@ import java.util.Properties;
 //@Configuration
 public class MySupport extends WeixinSupport {
     private static final Logger logger = LoggerFactory.getLogger(MySupport.class);
+
+
+
+    @Autowired
+    DubboBiz dubboBiz;
 
     //@Value("${weixin.appId}")
     private String appId;
@@ -77,9 +84,7 @@ public class MySupport extends WeixinSupport {
 
     @Override
     protected BaseMsg handleTextMsg(TextReqMsg msg) {
-        String content = msg.getContent();
-        logger.debug("content:{}", content);
-        return new TextMsg("hello world");
+        return dubboBiz.handleMessage(msg);
     }
 
     @Override
@@ -88,6 +93,11 @@ public class MySupport extends WeixinSupport {
         String timestamp = request.getParameter("timestamp");
         String nonce = request.getParameter("nonce");
         return SignUtil.checkSignature(this.getToken(), signature, timestamp, nonce);
+    }
+
+    @Override
+    public String processRequest(HttpServletRequest request){
+        return super.processRequest(request);
     }
 
     @Override
