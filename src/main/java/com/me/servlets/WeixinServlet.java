@@ -28,9 +28,10 @@ public class WeixinServlet extends HttpServlet{
 
 
     public WeixinServlet(){
-        //support = new MySupport();
+
         logger.info("weixin servelet init");
-        support = BeanLoader.getBean(MySupport.class);
+        support = new MySupport();
+        //support = BeanLoader.getBean(MySupport.class);
 
     }
 
