@@ -10,17 +10,18 @@ import org.springframework.stereotype.Service;
 /**
  * Created by kenya on 2018/2/5.
  */
-@Service
+//@Service
 public class BServiceProxyImpl implements BServiceProxy{
     private static final Logger LOGGER = LoggerFactory.getLogger(BServiceProxyImpl.class);
 
     private static FacadeService facadeService = null;
 
     public BServiceProxyImpl() {
+        LOGGER.info("bserviceproxyimpl init");
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"app_facade_consumer.xml"});
         context.start();
         //获取远程服务代理
-        FacadeService facadeService = (FacadeService) context.getBean("facadeService");
+        facadeService = (FacadeService) context.getBean("facadeService");
     }
 
     public Message handleMessage(Message msg){

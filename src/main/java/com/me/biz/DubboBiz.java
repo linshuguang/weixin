@@ -5,9 +5,13 @@ import com.github.sd4324530.fastweixin.message.req.BaseReq;
 import com.github.sd4324530.fastweixin.message.req.BaseReqMsg;
 import com.github.sd4324530.fastweixin.message.req.TextReqMsg;
 import com.me.proxy.BServiceProxy;
+import com.me.proxy.BServiceProxyImpl;
+import com.me.servlets.MySupport;
 import name.lsg.common.Message;
 import name.lsg.common.TextMsg;
 import name.lsg.facade.service.FacadeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
@@ -18,12 +22,21 @@ import java.util.List;
 /**
  * Created by kenya on 2018/1/18.
  */
-@Service
+//@Service
 public class DubboBiz {
 
+    private static final Logger logger = LoggerFactory.getLogger(DubboBiz.class);
 
-    @Autowired
+    //@Autowired
     BServiceProxy bServiceProxy;
+
+    public DubboBiz(){
+
+        bServiceProxy = new BServiceProxyImpl();
+        logger.debug("dubbobiz init");
+    }
+
+
 
     private List<String> makeList(String str){
         List<String > fromList = new ArrayList<String>();

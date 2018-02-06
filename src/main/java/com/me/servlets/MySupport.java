@@ -10,6 +10,8 @@ import org.codehaus.plexus.util.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,12 +25,13 @@ import java.util.Properties;
  */
 //@PropertySource("classpath:config/config.properties")
 //@Configuration
+@Service
 public class MySupport extends WeixinSupport {
     private static final Logger logger = LoggerFactory.getLogger(MySupport.class);
 
 
 
-    @Autowired
+    //@Autowired
     DubboBiz dubboBiz;
 
     //@Value("${weixin.appId}")
@@ -39,6 +42,12 @@ public class MySupport extends WeixinSupport {
     private final String appSecretConfName = "appSecret";
     private final String tokenConfName = "token";
     private final String aesKeyConfName = "aesKey";
+
+
+    public MySupport(){
+        dubboBiz = new DubboBiz();
+        logger.info("my support init");
+    }
 
     private String getProperty(String confName){
         Properties prop = new Properties();

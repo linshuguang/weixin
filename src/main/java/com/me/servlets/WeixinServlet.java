@@ -1,8 +1,15 @@
 package com.me.servlets;
 
+import com.me.utils.BeanLoader;
+import org.codehaus.plexus.util.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +24,16 @@ public class WeixinServlet extends HttpServlet{
 
     private static final Logger logger = LoggerFactory.getLogger(WeixinServlet.class);
 
-    private final MySupport support = new MySupport();
+    private MySupport support;
+
+
+    public WeixinServlet(){
+        //support = new MySupport();
+        logger.info("weixin servelet init");
+        support = BeanLoader.getBean(MySupport.class);
+
+    }
+
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,18 +44,23 @@ public class WeixinServlet extends HttpServlet{
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.debug("post");
-        if(this.support.isLegal(request)) {
-            logger.debug("valid weixin request");
-            response.setCharacterEncoding("UTF-8");
-            String resp = this.support.processRequest(request);
-            PrintWriter pw = response.getWriter();
-            pw.write(resp);
-            pw.flush();
-            pw.close();
-        }else{
-            logger.debug("not valid weixin request");
+        logger.debug("post begin");
+        try {
+            if (this.support.isLegal(request)) {
+                logger.debug("valid weixin request");
+                response.setCharacterEncoding("UTF-8");
+                String resp = this.support.processRequest(request);
+                PrintWriter pw = response.getWriter();
+                pw.write(resp);
+                pw.flush();
+                pw.close();
+            } else {
+                logger.debug("not valid weixin request");
+            }
+        }catch(Exception e){
+            logger.error(ExceptionUtils.getStackTrace(e));
         }
+        logger.debug("post end");
     }
 
 }
